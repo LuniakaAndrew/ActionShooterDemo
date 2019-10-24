@@ -1,14 +1,20 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Experimental.PlayerLoop;
 
 public class ShellLauncher : MonoBehaviour
 {
-    public GameObject shell;
+    #region Parameters
 
-    public float h = 25;
-    public float gravity = -18;
+    [SerializeField] private float _height = 25f;
+    [SerializeField] private float _gravity = -18;
 
-    public bool debugPath;
+    #endregion
+
+    public GameObject _shell;
+
+    #region Controls
 
     public void Launch(Vector3 target)
     {
@@ -17,34 +23,51 @@ public class ShellLauncher : MonoBehaviour
 
     private IEnumerator LaunchArc(Vector3 target)
     {
-        LaunchData launchData = CalculateLaunchData(target);
-        Vector3 startPoint = shell.transform.position;
-        int resolution = 100;
-        float pause = launchData.timeToTarget / resolution;
-        for (int i = 1; i <= resolution; i++)
+        float currentHeight = _height;
+        Vector3 currentTarget = target;
+        float distance = (currentTarget - transform.position).magnitude;
+        Vector3 direction = (currentTarget - transform.position).normalized;
+        Vector3 startPoint = _shell.transform.position;
+        for (int i = 0; i < 3; i++)
         {
-            float simulationTime = i / (float) resolution * launchData.timeToTarget;
-            Vector3 displacement = launchData.initialVelocity * simulationTime +
-                                   Vector3.up * gravity * simulationTime * simulationTime / 2f;
-            Vector3 drawPoint = startPoint + displacement;
+            LaunchData launchData = CalculateLaunchData(target, startPoint, currentHeight);
 
-            shell.transform.position = drawPoint;
-            yield return new WaitForSeconds(pause);
+            int resolution = 100;
+            float pause = launchData.timeToTarget / resolution;
+            for (int j = 1; j <= resolution; j++)
+            {
+                float simulationTime = j / (float) resolution * launchData.timeToTarget;
+                Vector3 displacement = launchData.initialVelocity * simulationTime +
+                                       Vector3.up * _gravity * simulationTime * simulationTime / 2f;
+                Vector3 drawPoint = startPoint + displacement;
+                Debug.DrawLine (startPoint, drawPoint, Color.green);
+                _shell.transform.position = drawPoint;
+                yield return new WaitForSeconds(pause);
+            }
+
+            currentHeight /= 2f;
+            distance -= distance * 0.5f;
+            startPoint = target;
+            target += direction * distance;
         }
     }
 
-    private LaunchData CalculateLaunchData(Vector3 target)
+    private LaunchData CalculateLaunchData(Vector3 target, Vector3 shell, float height)
     {
-        float displacementY = target.y - shell.transform.position.y;
+        float displacementY = target.y - shell.y;
         Vector3 displacementXZ =
-            new Vector3(target.x - shell.transform.position.x, 0,
-                target.z - shell.transform.position.z);
-        float time = Mathf.Sqrt(-2 * h / gravity) + Mathf.Sqrt(2 * (displacementY - h) / gravity);
-        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * h);
+            new Vector3(target.x - shell.x, 0,
+                target.z - shell.z);
+        float time = Mathf.Sqrt(-2 * height / _gravity) + Mathf.Sqrt(2 * (displacementY - height) / _gravity);
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * _gravity * height);
         Vector3 velocityXZ = displacementXZ / time;
 
-        return new LaunchData(velocityXZ + velocityY * -Mathf.Sign(gravity), time);
+        return new LaunchData(velocityXZ + velocityY * -Mathf.Sign(_gravity), time);
     }
+
+    #endregion
+
+    #region Classes
 
     private struct LaunchData
     {
@@ -57,4 +80,6 @@ public class ShellLauncher : MonoBehaviour
             this.timeToTarget = timeToTarget;
         }
     }
+
+    #endregion
 }
