@@ -1,18 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils;
 
-public class EnemyDetector : MonoBehaviour
+public class EnemyDetector : SingletonComponent<EnemySpawner>
 {
+    #region Singleton
+
+    public static EnemyDetector Instance
+    {
+        get { return ((EnemyDetector) _Instance); }
+        set { _Instance = value; }
+    }
+
+    #endregion
+
+    #region Actions
+
     public Action<Vector3> onEnemyDetect;
+
+    #endregion
+
+    #region Parameters
+
     [SerializeField] private Player _player;
     [SerializeField] private float _distanceToEnemy;
-    [SerializeField] private EnemySpawner _enemySpawner;
+
+    #endregion
+
+    #region Fields
+
     private List<Enemy> _enemies = new List<Enemy>();
+
+    #endregion
+
+    #region Controls
 
     private void Start()
     {
-        _enemies = _enemySpawner.GetEnemies();
+        _enemies = EnemySpawner.Instance.GetEnemies();
     }
 
     // Update is called once per frame
@@ -28,4 +54,6 @@ public class EnemyDetector : MonoBehaviour
             }
         }
     }
+
+    #endregion
 }
