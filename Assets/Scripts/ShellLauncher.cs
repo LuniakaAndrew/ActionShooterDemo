@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
+using Utils;
 
 public class ShellLauncher : MonoBehaviour
 {
@@ -12,8 +13,6 @@ public class ShellLauncher : MonoBehaviour
 
     #endregion
 
-    public GameObject _shell;
-
     #region Controls
 
     public void Launch(Vector3 target)
@@ -23,11 +22,13 @@ public class ShellLauncher : MonoBehaviour
 
     private IEnumerator LaunchArc(Vector3 target)
     {
+        GameObject shell = PoolManager.Instance.GetObject("Shells");
+        shell.transform.position = transform.position;
         float currentHeight = _height;
         Vector3 currentTarget = target;
         float distance = (currentTarget - transform.position).magnitude;
         Vector3 direction = (currentTarget - transform.position).normalized;
-        Vector3 startPoint = _shell.transform.position;
+        Vector3 startPoint = shell.transform.position;
         for (int i = 0; i < 3; i++)
         {
             LaunchData launchData = CalculateLaunchData(target, startPoint, currentHeight);
@@ -40,8 +41,8 @@ public class ShellLauncher : MonoBehaviour
                 Vector3 displacement = launchData.initialVelocity * simulationTime +
                                        Vector3.up * _gravity * simulationTime * simulationTime / 2f;
                 Vector3 drawPoint = startPoint + displacement;
-                Debug.DrawLine (startPoint, drawPoint, Color.green);
-                _shell.transform.position = drawPoint;
+                Debug.DrawLine(startPoint, drawPoint, Color.green);
+                shell.transform.position = drawPoint;
                 yield return new WaitForSeconds(pause);
             }
 
