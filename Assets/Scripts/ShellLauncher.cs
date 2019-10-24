@@ -59,6 +59,9 @@ public class ShellLauncher : MonoBehaviour
             startPoint = target;
             target += direction * distance;
         }
+
+        yield return new WaitForSeconds(1f);
+        PoolManager.Instance.ReturnObject(shell.GetComponent<PoolObject>());
     }
 
     private LaunchData CalculateLaunchData(Vector3 target, Vector3 shell, float height)
