@@ -16,9 +16,9 @@ public class Player : MonoBehaviour
         EnemyDetector.Instance.onEnemyDetect += FireInEnemy;
     }
 
-    private void FireInEnemy(Vector3 target)
+    private void FireInEnemy(Enemy enemy)
     {
-        _shellLauncher.Launch(target);
+        _shellLauncher.Launch(enemy.transform.position);
     }
 
     #endregion

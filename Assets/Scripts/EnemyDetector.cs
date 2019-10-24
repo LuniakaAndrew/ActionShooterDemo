@@ -17,7 +17,7 @@ public class EnemyDetector : SingletonComponent<EnemyDetector>
 
     #region Actions
 
-    public Action<Vector3> onEnemyDetect;
+    public Action<Enemy> onEnemyDetect;
 
     #endregion
 
@@ -43,15 +43,40 @@ public class EnemyDetector : SingletonComponent<EnemyDetector>
 
     private void Update()
     {
+        if (EnemyNear(_player.transform.position, _distanceToEnemy))
+        {
+        }
+    }
+
+    public bool EnemyNear(Vector3 pos, float radius)
+    {
         for (int i = 0; i < _enemies.Count; i++)
         {
             if (!_enemies[i].IsDetected &&
-                Vector3.Distance(_player.transform.position, _enemies[i].transform.position) <= _distanceToEnemy)
+                Vector3.Distance(pos, _enemies[i].transform.position) <= radius)
             {
                 _enemies[i].IsDetected = true;
-                onEnemyDetect?.Invoke(_enemies[i].transform.position);
+                onEnemyDetect?.Invoke(_enemies[i]);
             }
         }
+
+        return false;
+    }
+
+
+    public List<Enemy> GetNearEnemies(Vector3 pos, float radius)
+    {
+        List<Enemy> enemies = new List<Enemy>();
+        for (int i = 0; i < _enemies.Count; i++)
+        {
+            if (!_enemies[i].IsDead &&
+                Vector3.Distance(pos, _enemies[i].transform.position) <= radius)
+            {
+                enemies.Add(_enemies[i]);
+            }
+        }
+
+        return new List<Enemy>(enemies);
     }
 
     #endregion

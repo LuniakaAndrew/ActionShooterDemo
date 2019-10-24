@@ -46,6 +46,14 @@ public class ShellLauncher : MonoBehaviour
                 yield return new WaitForSeconds(pause);
             }
 
+            EnemyDetector.Instance.GetNearEnemies(shell.transform.position, shell.GetComponent<Shell>().DamageRadius)
+                .ForEach(
+                    (e) =>
+                    {
+                        Debug.Log(e);
+                        e.Kill();
+                    });
+
             currentHeight /= 2f;
             distance -= distance * 0.5f;
             startPoint = target;
