@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utils;
 
-public class EnemyDetector : SingletonComponent<EnemySpawner>
+public class EnemyDetector : SingletonComponent<EnemyDetector>
 {
     #region Singleton
 
@@ -41,15 +41,14 @@ public class EnemyDetector : SingletonComponent<EnemySpawner>
         _enemies = EnemySpawner.Instance.GetEnemies();
     }
 
-    // Update is called once per frame
     private void Update()
     {
         for (int i = 0; i < _enemies.Count; i++)
         {
-            if (!_enemies[i].isDetected &&
+            if (!_enemies[i].IsDetected &&
                 Vector3.Distance(_player.transform.position, _enemies[i].transform.position) <= _distanceToEnemy)
             {
-                _enemies[i].isDetected = true;
+                _enemies[i].IsDetected = true;
                 onEnemyDetect?.Invoke(_enemies[i].transform.position);
             }
         }

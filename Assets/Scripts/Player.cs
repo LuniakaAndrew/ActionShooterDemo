@@ -1,21 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    #region Parameters
+
     [SerializeField] private ShellLauncher _shellLauncher;
 
-    [SerializeField] private EnemyDetector _enemyDetector;
+    #endregion
 
-    // Start is called before the first frame update
+
+    #region Controls
+
     private void Awake()
     {
-        _enemyDetector.onEnemyDetect += FireInEnemy;
+        EnemyDetector.Instance.onEnemyDetect += FireInEnemy;
     }
 
     private void FireInEnemy(Vector3 target)
     {
         _shellLauncher.Launch(target);
     }
+
+    #endregion
 }
