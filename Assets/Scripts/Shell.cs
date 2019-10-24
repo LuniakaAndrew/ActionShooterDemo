@@ -1,18 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Shell : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    #region Parameters
+
+    [SerializeField] private float _damageRadius = 1f;
+
+    #endregion
+
+    #region Properties
+
+    public float DamageRadius
     {
-        
+        get => _damageRadius;
+        set => _damageRadius = value;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    #endregion
 }
