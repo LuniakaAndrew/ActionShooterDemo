@@ -13,7 +13,7 @@ namespace Utils
 
         #region Controls
 
-        protected static SingletonComponent<T> Instance
+        protected static SingletonComponent<T> _Instance
         {
             get
             {
