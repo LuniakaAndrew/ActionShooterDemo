@@ -69,7 +69,7 @@ public class EnemyDetector : SingletonComponent<EnemyDetector>
         List<Enemy> enemies = new List<Enemy>();
         for (int i = 0; i < _enemies.Count; i++)
         {
-            if (!_enemies[i].IsDead &&
+            if (!_enemies[i].IsDead && !_enemies[i].IsDead &&
                 Vector3.Distance(pos, _enemies[i].transform.position) <= radius)
             {
                 enemies.Add(_enemies[i]);
