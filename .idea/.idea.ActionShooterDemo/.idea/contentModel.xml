@@ -11,6 +11,7 @@
           <e p="Enemy.cs" t="Include" />
           <e p="EnemyDetector.cs" t="Include" />
           <e p="EnemySpawner.cs" t="Include" />
+          <e p="GameController.cs" t="Include" />
           <e p="Player.cs" t="Include" />
           <e p="PlayerMove.cs" t="Include" />
           <e p="Shell.cs" t="Include" />
