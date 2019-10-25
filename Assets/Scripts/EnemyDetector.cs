@@ -52,7 +52,7 @@ public class EnemyDetector : SingletonComponent<EnemyDetector>
     {
         for (int i = 0; i < _enemies.Count; i++)
         {
-            if (!_enemies[i].IsDetected &&
+            if (!_enemies[i].IsDetected && !_enemies[i].IsDead &&
                 Vector3.Distance(pos, _enemies[i].transform.position) <= radius)
             {
                 _enemies[i].IsDetected = true;
